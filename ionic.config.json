@@ -1,0 +1,7 @@
+{
+  "name": "Tourismgram",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
