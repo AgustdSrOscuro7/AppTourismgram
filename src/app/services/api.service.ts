@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Country, City, Celebrity, Dish, Place } from '../interfaces/data.interface';
 import { VisitPlace } from "../interfaces/visits.interface";
+import { FavoritePlace } from "../interfaces/favoritePlace.interface"
 
 // Nueva interfaz para la respuesta genérica de tu API
 export interface ApiResponse<T> {
@@ -22,19 +23,19 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  get<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+  get<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> {
     return this.http.get<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, { headers });
   }
 
-  post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+  post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, data, { headers });
   }
 
-  put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+  put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> {
     return this.http.put<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, data, { headers });
   }
 
-  delete<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+  delete<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> {
     return this.http.delete<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, { headers });
   }
 
@@ -63,5 +64,22 @@ export class ApiService {
 
   getVisitsByUser(userId: string): Observable<ApiResponse<VisitPlace[]>> {
     return this.http.get<ApiResponse<VisitPlace[]>>(`${this.apiUrl}/visitPlaces/user/${userId}`);
+  }
+
+  // ¡CORRECCIÓN AQUÍ! Asegúrate de que la URL sea correcta.
+  getFavoritesByUser(userId: string): Observable<ApiResponse<FavoritePlace[]>> {
+    return this.http.get<ApiResponse<FavoritePlace[]>>(`${this.apiUrl}/Favorites/user/${userId}`);
+  }
+
+  addFavorite(userId: string, siteId: string): Observable<ApiResponse<FavoritePlace>> {
+    return this.http.post<ApiResponse<FavoritePlace>>(`${this.apiUrl}/Favorites`, { user_id: userId, site_id: siteId });
+  }
+
+  removeFavorite(favoriteId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/Favorites/${favoriteId}`);
+  }
+
+  removeFavoriteByUserIdAndSiteId(userId: string, siteId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/Favorites/byUserAndSite?user_id=${userId}&site_id=${siteId}`);
   }
 }

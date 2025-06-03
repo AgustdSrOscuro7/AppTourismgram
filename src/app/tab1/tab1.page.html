@@ -60,7 +60,7 @@
           <h2>{{ city.name }}</h2>
         </ion-label>
       </ion-item>
-      <ion-item *ngIf="cities.length === 0 && selectedCategory === 'cities'">
+      <ion-item *ngIf="cities.length === 0">
         <ion-label>Cargando ciudades...</ion-label>
       </ion-item>
     </ng-container>
@@ -74,7 +74,7 @@
           <h2>{{ celebrity.name }}</h2>
         </ion-label>
       </ion-item>
-      <ion-item *ngIf="celebrities.length === 0 && selectedCategory === 'famous'">
+      <ion-item *ngIf="celebrities.length === 0">
         <ion-label>Cargando famosos...</ion-label>
       </ion-item>
     </ng-container>
@@ -87,8 +87,15 @@
         <ion-label>
           <h2>{{ place.name }}</h2>
         </ion-label>
+        <ion-buttons slot="end">
+          <ion-button (click)="toggleFavorite(place)">
+            <ion-icon [name]="isFavorite(place._id) ? 'heart' : 'heart-outline'"
+                      [color]="isFavorite(place._id) ? 'danger' : 'medium'">
+            </ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-item>
-      <ion-item *ngIf="places.length === 0 && selectedCategory === 'sites'">
+      <ion-item *ngIf="places.length === 0">
         <ion-label>Cargando sitios...</ion-label>
       </ion-item>
     </ng-container>
@@ -102,7 +109,7 @@
           <h2>{{ dish.name }}</h2>
         </ion-label>
       </ion-item>
-      <ion-item *ngIf="dishes.length === 0 && selectedCategory === 'dishes'">
+      <ion-item *ngIf="dishes.length === 0">
         <ion-label>Cargando platos...</ion-label>
       </ion-item>
     </ng-container>
