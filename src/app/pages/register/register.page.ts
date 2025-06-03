@@ -25,6 +25,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.fb.group({
+      name: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
@@ -60,9 +61,16 @@ export class RegisterPage implements OnInit {
     });
     await loading.present();
 
-    const { email, password, role } = this.registerForm.value;
+    const { name, email, password, role } = this.registerForm.value;
 
-    this.authService.register({ email, password, role }).subscribe({
+    const apiUserData = {
+      name: name, // Asegúrate de obtener el nombre del formulario si lo tienes
+      mail: email, // Mapea 'email' del formulario a 'mail' de la API
+      password: password,
+      rol: role.toUpperCase() // Mapea 'role' a 'rol' y asegúrate de que esté en mayúsculas como 'USER_ROLE' o 'ADMIN_ROLE'
+    };
+
+    this.authService.register(apiUserData).subscribe({
       next: async (response) => {
         loading.dismiss();
         this.isLoading = false;

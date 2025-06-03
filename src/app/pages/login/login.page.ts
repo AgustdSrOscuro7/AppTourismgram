@@ -25,7 +25,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      mail: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]] // Ajusta minLength según tu API
     });
   }
@@ -45,9 +45,9 @@ export class LoginPage implements OnInit {
     });
     await loading.present();
 
-    const { email, password } = this.loginForm.value;
+    const { mail, password } = this.loginForm.value;
 
-    this.authService.login({ email, password }).subscribe({
+    this.authService.login({ mail, password }).subscribe({
       next: (response) => {
         loading.dismiss();
         this.isLoading = false;

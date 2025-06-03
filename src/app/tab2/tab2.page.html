@@ -1,17 +1,90 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <ion-title>Visitas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="large">Visitas</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onSegmentChanged($event)" scrollable class="ion-padding-horizontal">
+    <ion-segment-button value="visitPlaces">
+      <ion-label>Visitas a sitios</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="tagFamous">
+      <ion-label>Tag a famosos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+
+        <div *ngIf="selectedCategory === 'visitPlaces'">
+          <div class="ion-padding-vertical">
+            <ion-button expand="block" routerLink="/tabs/tab2/record-visit">
+              <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+              Registrar Nueva Visita
+            </ion-button>
+          </div>
+
+          <div *ngIf="loadingVisits" class="ion-text-center ion-padding-vertical">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando historial de visitas...</p>
+          </div>
+
+          <ion-list *ngIf="!loadingVisits && visits.length > 0">
+            <ion-item *ngFor="let visit of visits">
+              <ng-container *ngIf="visit.place_id; else noPlaceData"> <ion-thumbnail slot="start">
+                <img [src]="visit.place_id.img || 'https://via.placeholder.com/150'" alt="{{ visit.place_id.name || 'Lugar desconocido' }}">
+              </ion-thumbnail>
+                <ion-label>
+                  <h2>{{ visit.place_id.name || 'Lugar no disponible' }}</h2>
+                  <p>Visitado el: {{ visit.date_visit | date:'dd/MM/yyyy HH:mm' }}</p>
+                </ion-label>
+              </ng-container>
+              <ng-template #noPlaceData>
+                <ion-thumbnail slot="start">
+                  <img src="https://via.placeholder.com/150" alt="Sin imagen">
+                </ion-thumbnail>
+                <ion-label>
+                  <h2>Lugar Desconocido</h2>
+                  <p>Visitado el: {{ visit.date_visit | date:'dd/MM/yyyy HH:mm' }}</p>
+                </ion-label>
+              </ng-template>
+            </ion-item>
+          </ion-list>
+
+          <div *ngIf="!loadingVisits && visits.length === 0" class="ion-text-center ion-padding-vertical">
+            <p>Aún no has registrado ninguna visita a un sitio</p>
+          </div>
+        </div>
+
+        <div *ngIf="selectedCategory === 'tagFamous'">
+          <div class="ion-padding-vertical">
+            <ion-button expand="block" routerLink="/tabs/tab2/record-visit">
+              <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+              Etiquetar Nuevo Famoso
+            </ion-button>
+          </div>
+
+          <div *ngIf="!loadingTags && tags.length === 0" class="ion-text-center ion-padding-vertical">
+            <p>Aún no has registrado ninguna etiqueta a un famoso</p>
+          </div>
+
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

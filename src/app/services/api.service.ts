@@ -1,10 +1,18 @@
+// src/app/services/api.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { City } from '../interfaces/city.interface';
-import { Celebrity } from '../interfaces/celebrity.interface';
-import { Country } from '../interfaces/country.interface';
+import { Country, City, Celebrity, Dish, Place } from '../interfaces/data.interface';
+import { VisitPlace } from "../interfaces/visits.interface";
+
+// Nueva interfaz para la respuesta genérica de tu API
+export interface ApiResponse<T> {
+  Ok: boolean;
+  total: number;
+  resp: T; // 'resp' contendrá el array de datos (ej. Country[], City[], etc.)
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,51 +22,46 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // Método genérico para realizar solicitudes GET
-  get<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}${endpoint}`, { headers });
+  get<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+    return this.http.get<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, { headers });
   }
 
-  // Método genérico para realizar solicitudes POST
-  post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.post<T>(`${this.apiUrl}${endpoint}`, data, { headers });
+  post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+    return this.http.post<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, data, { headers });
   }
 
-  // Método genérico para realizar solicitudes PUT (actualizar)
-  put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}${endpoint}`, data, { headers });
+  put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+    return this.http.put<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, data, { headers });
   }
 
-  // Método genérico para realizar solicitudes DELETE
-  delete<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.delete<T>(`${this.apiUrl}${endpoint}`, { headers });
+  delete<T>(endpoint: string, headers?: HttpHeaders): Observable<ApiResponse<T>> { // <--- CAMBIO AQUÍ
+    return this.http.delete<ApiResponse<T>>(`${this.apiUrl}${endpoint}`, { headers });
   }
 
-  // Paises
-  getCountries(): Observable<any[]> {
-    return this.get<any[]>('Countries');
+  getCountries(): Observable<ApiResponse<Country[]>> {
+    return this.get<Country[]>('Countries');
   }
 
-  // Celebrities
-  getCelebrities(): Observable<any[]> {
-    return this.get<any[]>('Celebrities');
+  getCities(): Observable<ApiResponse<City[]>> {
+    return this.get<City[]>('Cities');
+  }
+  getCitiesByCountryId(countryId: string): Observable<ApiResponse<City[]>> {
+    return this.get<City[]>(`Cities?countryId=${countryId}`);
   }
 
-  getCelebrityById(id: string): Observable<any> {
-    return this.get<any>(`Celebrities/${id}`);
+  getCelebrities(): Observable<ApiResponse<Celebrity[]>> {
+    return this.get<Celebrity[]>(`Celebrities`);
   }
 
-  // Cities
-  getCities(): Observable<any[]> {
-    return this.get<any[]>('Cities');
+  getCelebrityById(id: string): Observable<ApiResponse<Celebrity>> {
+    return this.get<Celebrity>(`Celebrities/${id}`);
   }
 
-  // Suponiendo que tienes un endpoint para obtener ciudades por país
-  getCitiesByCountryId(countryId: string): Observable<any[]> {
-    return this.get<any[]>(`Cities?countryId=${countryId}`); // Ajusta esto según cómo tu API maneje el filtro.
-  }
+  getDishes(): Observable<ApiResponse<Dish[]>> { return this.get<Dish[]>('Dishes'); }
+  getPlaces(): Observable<ApiResponse<Place[]>> { return this.get<Place[]>('Places'); }
+  login(credentials: any): Observable<any> { return this.post<any>('Auth/login', credentials); } // El login puede tener una estructura de respuesta diferente
 
-  getSites(): Observable<any[]> { return this.get<any[]>('Sites'); }
-  getDishes(): Observable<any[]> { return this.get<any[]>('Dishes'); }
-  login(credentials: any): Observable<any> { return this.post<any>('Auth/login', credentials); }
+  getVisitsByUser(userId: string): Observable<ApiResponse<VisitPlace[]>> {
+    return this.http.get<ApiResponse<VisitPlace[]>>(`${this.apiUrl}/visitPlaces/user/${userId}`);
+  }
 }

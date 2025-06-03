@@ -10,6 +10,10 @@
 <ion-content class="ion-padding">
   <form (ngSubmit)="register()" [formGroup]="registerForm">
     <ion-item>
+      <ion-input label="Nombre Completo" type="string" placeholder="Pepito Perez" formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-input label="Correo Electrónico" type="email" placeholder="tu@ejemplo.com" formControlName="email"></ion-input>
     </ion-item>
 
@@ -23,8 +27,8 @@
 
     <ion-item>
       <ion-select label="Tipo de Usuario" formControlName="role" interface="popover" placeholder="Selecciona un rol">
-        <ion-select-option value="user">Usuario Común</ion-select-option>
-        <ion-select-option value="admin">Administrador</ion-select-option>
+        <ion-select-option value="user_role">Usuario Común</ion-select-option>
+        <ion-select-option value="admin_role">Administrador</ion-select-option>
       </ion-select>
     </ion-item>
 

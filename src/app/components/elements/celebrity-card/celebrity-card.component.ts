@@ -1,39 +1,26 @@
 import { Component, Input } from '@angular/core';
-import { Celebrity } from '../../../interfaces/celebrity.interface';
-import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonImg,
-  IonButton,
-  IonIcon
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { person, location, star } from 'ionicons/icons';
+import { CommonModule } from '@angular/common';
+import { Celebrity } from '../../../interfaces/data.interface';
+import {IonicModule} from "@ionic/angular";
 
 @Component({
   selector: 'app-celebrity-card',
-  templateUrl: './celebrity-card.component.html',
-  styleUrls: ['./celebrity-card.component.scss'],
   standalone: true,
-  imports: [
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonImg,
-    IonButton,
-    IonIcon
-  ]
+  imports: [CommonModule, IonicModule],
+  template: `
+    <ion-card *ngIf="celebrity">
+      <ion-card-header>
+        <ion-card-title>{{ celebrity.name }}</ion-card-title>
+        <ion-card-subtitle>{{ celebrity.profession }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Imagen: {{ celebrity.img }}</p>
+        <p>Biografía: {{ celebrity.city_id }}</p>
+      </ion-card-content>
+    </ion-card>
+  `,
+  styles: [``]
 })
 export class CelebrityCardComponent {
   @Input() celebrity!: Celebrity;
-
-  constructor() {
-    // Registrar los íconos que necesitamos
-    addIcons({ person, location, star });
-  }
 }
