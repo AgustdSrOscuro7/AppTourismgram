@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrarse</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="register()" [formGroup]="registerForm">
+    <ion-item>
+      <ion-input label="Correo Electrónico" type="email" placeholder="tu@ejemplo.com" formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Contraseña" type="password" placeholder="Tu Contraseña" formControlName="password"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Confirmar Contraseña" type="password" placeholder="Repite tu Contraseña" formControlName="confirmPassword"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Tipo de Usuario" formControlName="role" interface="popover" placeholder="Selecciona un rol">
+        <ion-select-option value="user">Usuario Común</ion-select-option>
+        <ion-select-option value="admin">Administrador</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div class="ion-padding-top">
+      <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || isLoading">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        Crear Cuenta
+      </ion-button>
+    </div>
+
+    <ion-text color="danger" *ngIf="errorMessage" class="ion-text-center">
+      <p>{{ errorMessage }}</p>
+    </ion-text>
+  </form>
+</ion-content>
